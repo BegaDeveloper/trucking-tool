@@ -1,0 +1,142 @@
+<section>
+  <div class="main-cont">
+    <mat-card>
+      <mat-card-header>
+        <div class="flex">
+          <div class="logo">
+            <img src="/assets/logo-rush.png" width="180px" alt="Logo" />
+          </div>
+          <div class="header"></div>
+        </div>
+      </mat-card-header>
+      <mat-card-content>
+        <form [formGroup]="toolForm" (ngSubmit)="onSubmit()">
+          <div class="flex justify-between">
+            <div class="toggle">
+              <p>
+                <mat-slide-toggle
+                  formControlName="exportImportToggle"
+                  color="primary"
+                  labelPosition="before"
+                >
+                  Export
+                </mat-slide-toggle>
+                Import
+              </p>
+            </div>
+            <div class="port dense-2">
+              <mat-form-field appearance="outline">
+                <mat-label>Port</mat-label>
+                <input
+                  matInput
+                  formControlName="port"
+                  placeholder="Port of Origin"
+                />
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="destination full-width dense-2">
+            <mat-form-field
+              class="example-full-width full-width"
+              appearance="outline"
+            >
+              <mat-label>Destination</mat-label>
+              <input
+                matInput
+                formControlName="destination"
+                placeholder="Destination"
+              />
+            </mat-form-field>
+          </div>
+
+          <div class="dense-2">
+            <div class="full-width">
+              <mat-form-field
+                appearance="outline"
+                class="example-full-width full-width"
+              >
+                <mat-label>Container Type</mat-label>
+                <input
+                  matInput
+                  formControlName="containerType"
+                  placeholder="Enter container type"
+                />
+              </mat-form-field>
+            </div>
+            <div class="dense-2">
+              <mat-form-field
+                appearance="outline"
+                class="example-full-width full-width"
+              >
+                <mat-label>Shipping line</mat-label>
+                <input
+                  matInput
+                  formControlName="shippingLine"
+                  placeholder="Enter shipping line"
+                />
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="weight full-width dense-2">
+            <mat-form-field
+              class="example-full-width full-width"
+              appearance="outline"
+            >
+              <mat-label>Weight (lbs)</mat-label>
+              <input matInput formControlName="weight" type="number" />
+            </mat-form-field>
+          </div>
+
+          <div class="slider full-width dense-2">
+            <mat-slider
+              formControlName="weight"
+              min="0"
+              max="100000"
+              step="1000"
+              showTickMarks
+              class="full-width"
+              discrete
+              [displayWith]="formatLabel"
+            ></mat-slider>
+          </div>
+
+          <div class="info full-width">
+            <div class="dense-2">
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-label>Name</mat-label>
+                <input matInput formControlName="name" />
+              </mat-form-field>
+            </div>
+
+            <div class="dense-2">
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-label>Email</mat-label>
+                <input matInput formControlName="email" type="email" />
+              </mat-form-field>
+            </div>
+
+            <div class="dense-2">
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-label>Phone number</mat-label>
+                <input matInput formControlName="phone" type="tel" />
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="button">
+            <button
+              mat-flat-button
+              color="primary"
+              class="full-width"
+              type="submit"
+            >
+              Submit
+            </button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</section>

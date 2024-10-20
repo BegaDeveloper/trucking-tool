@@ -1,0 +1,38 @@
+.flex {
+  display: flex;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.logo {
+  margin-bottom: 6px;
+}
+
+.justify-between {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.example-full-width {
+  width: 100%;
+}
+
+mat-card {
+  box-shadow: none;
+  height: 100%;
+}
+
+mat-card-header {
+  background: #9d66ff;
+}
+
+mat-card-content {
+  border-radius: 15px;
+  margin-top: -11px;
+  background: #ffffff;
+  padding-top: 30px;
+  box-shadow: 0 0 5px #383838;
+}
