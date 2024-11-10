@@ -24,16 +24,29 @@
                 Import
               </p>
             </div>
-            <div class="port dense-2">
+            <div class="pickup-type dense-2">
               <mat-form-field appearance="outline">
-                <mat-label>Port</mat-label>
-                <input
-                  matInput
-                  formControlName="port"
-                  placeholder="Port of Origin"
-                />
+                <mat-label>Pickup Type</mat-label>
+                <mat-select formControlName="pickupType">
+                  <mat-option value="Port">Port</mat-option>
+                  <mat-option value="Rail">Rail</mat-option>
+                </mat-select>
               </mat-form-field>
             </div>
+          </div>
+
+          <div class="pickup-location full-width dense-2">
+            <mat-form-field
+              class="example-full-width full-width"
+              appearance="outline"
+            >
+              <mat-label>Pickup Location</mat-label>
+              <input
+                matInput
+                formControlName="pickupLocation"
+                placeholder="Enter pickup location"
+              />
+            </mat-form-field>
           </div>
 
           <div class="destination full-width dense-2">
@@ -69,7 +82,7 @@
                 appearance="outline"
                 class="example-full-width full-width"
               >
-                <mat-label>Shipping line</mat-label>
+                <mat-label>Shipping Line</mat-label>
                 <input
                   matInput
                   formControlName="shippingLine"
@@ -89,18 +102,7 @@
             </mat-form-field>
           </div>
 
-          <div class="slider full-width dense-2">
-            <mat-slider
-              formControlName="weight"
-              min="0"
-              max="100000"
-              step="1000"
-              showTickMarks
-              class="full-width"
-              discrete
-              [displayWith]="formatLabel"
-            ></mat-slider>
-          </div>
+          <mat-divider style="margin-bottom: 20px"></mat-divider>
 
           <div class="info full-width">
             <div class="dense-2">
@@ -119,7 +121,7 @@
 
             <div class="dense-2">
               <mat-form-field class="example-full-width" appearance="outline">
-                <mat-label>Phone number</mat-label>
+                <mat-label>Phone Number</mat-label>
                 <input matInput formControlName="phone" type="tel" />
               </mat-form-field>
             </div>
@@ -129,7 +131,7 @@
             <button
               mat-flat-button
               color="primary"
-              class="full-width"
+              class="full-width submit-btn"
               type="submit"
             >
               Submit

@@ -18,7 +18,7 @@ import {
 import axios from 'axios';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ResultDialogComponent } from '../../dialogs/result-dialog.component';
-
+import { MatDividerModule } from '@angular/material/divider';
 @Component({
   selector: 'app-tool',
   standalone: true,
@@ -35,24 +35,21 @@ import { ResultDialogComponent } from '../../dialogs/result-dialog.component';
     FormsModule,
     ReactiveFormsModule,
     MatDialogModule,
+    MatDividerModule,
   ],
   templateUrl: './tool.component.html',
   styleUrls: ['./tool.component.scss'],
 })
 export class ToolComponent implements OnInit {
   toolForm!: FormGroup;
-  foods = [
-    { value: 'steak-0', viewValue: 'Steak' },
-    { value: 'pizza-1', viewValue: 'Pizza' },
-    { value: 'tacos-2', viewValue: 'Tacos' },
-  ];
 
   constructor(private fb: FormBuilder, private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.toolForm = this.fb.group({
       exportImportToggle: [false],
-      port: ['', Validators.required],
+      pickupType: ['', Validators.required],
+      pickupLocation: ['', Validators.required],
       destination: ['', Validators.required],
       containerType: ['', Validators.required],
       shippingLine: ['', Validators.required],
@@ -64,8 +61,14 @@ export class ToolComponent implements OnInit {
   }
 
   openResultDialog(result: string): void {
-    this.dialog.open(ResultDialogComponent, {
+    const dialogRef = this.dialog.open(ResultDialogComponent, {
       data: { result },
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.toolForm.reset();
+      this.toolForm.markAsPristine();
+      this.toolForm.markAsUntouched();
     });
   }
 
@@ -78,21 +81,26 @@ export class ToolComponent implements OnInit {
 
   async calculateRoute() {
     const destination = this.toolForm.get('destination')?.value;
-    const port = this.toolForm.get('port')?.value;
+    const pickupLocation = this.toolForm.get('pickupLocation')?.value;
+    const pickupType = this.toolForm.get('pickupType')?.value;
     const accessToken = 'pk.25d5611af7c1840bcbcfb1b23b28b1c0';
 
     try {
-      const portResponse = await axios.get(
-        `https://us1.locationiq.com/v1/search.php?key=${accessToken}&q=${port}&format=json`
+      const pickupResponse = await axios.get(
+        `https://us1.locationiq.com/v1/search.php?key=${accessToken}&q=${encodeURIComponent(
+          pickupLocation
+        )}&format=json`
       );
       const destinationResponse = await axios.get(
-        `https://us1.locationiq.com/v1/search.php?key=${accessToken}&q=${destination}&format=json`
+        `https://us1.locationiq.com/v1/search.php?key=${accessToken}&q=${encodeURIComponent(
+          destination
+        )}&format=json`
       );
 
-      if (portResponse.data.length && destinationResponse.data.length) {
-        const portCoords = [
-          parseFloat(portResponse.data[0].lat),
-          parseFloat(portResponse.data[0].lon),
+      if (pickupResponse.data.length && destinationResponse.data.length) {
+        const pickupCoords = [
+          parseFloat(pickupResponse.data[0].lat),
+          parseFloat(pickupResponse.data[0].lon),
         ];
         const destinationCoords = [
           parseFloat(destinationResponse.data[0].lat),
@@ -100,18 +108,26 @@ export class ToolComponent implements OnInit {
         ];
 
         const distanceResponse = await axios.get(
-          `https://us1.locationiq.com/v1/directions/driving/${portCoords[1]},${portCoords[0]};${destinationCoords[1]},${destinationCoords[0]}?key=${accessToken}&overview=false`
+          `https://us1.locationiq.com/v1/directions/driving/${pickupCoords[1]},${pickupCoords[0]};${destinationCoords[1]},${destinationCoords[0]}?key=${accessToken}&overview=false`
         );
 
-        if (distanceResponse.data.routes.length) {
-          const distance = distanceResponse.data.routes[0].distance / 1609.34; // convert meters to miles
+        if (
+          distanceResponse.data.routes &&
+          distanceResponse.data.routes.length
+        ) {
+          const distance = distanceResponse.data.routes[0].distance / 1609.34; // Convert meters to miles
           const cost = distance * 2 * 2 + 0.34 * distance * 2; // Calculating cost with $2 per mile + 34% fuel surcharge
           const costString = `Total cost for the trip is $${cost.toFixed(2)}`;
           this.openResultDialog(costString);
+        } else {
+          this.openResultDialog('No route found between the locations.');
         }
+      } else {
+        this.openResultDialog('Invalid pickup location or destination.');
       }
     } catch (error) {
       console.error('Error calculating route', error);
+      this.openResultDialog('An error occurred while calculating the route.');
     }
   }
 
